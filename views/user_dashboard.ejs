@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeof title !== 'undefined' ? title : 'User Dashboard' %></title>
+    <link rel="stylesheet" href="/css/user_dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Dashboard</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="/user/dashboard" class="<%= typeof activePage !== 'undefined' && activePage === 'dashboard' ? 'active' : '' %>"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="/user/dashboard" class="<%= typeof activePage !== 'undefined' && activePage === 'upload' ? 'active' : '' %>"><i class="fas fa-file-upload"></i> Upload Document</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="#"><i class="fas fa-info-circle"></i> Help</a></li>
+                    <li class="sidebar-category">Your Documents</li>
+                    <div id="userDocumentsList" class="document-list-scroll">
+                        <% if (typeof documents !== 'undefined' && documents.length > 0) { %>
+                            <% documents.forEach(doc => { %>
+                                <li class="document-item">
+                                    <a href="/user/document/<%= doc.id %>" target="_blank" title="<%= doc.filename %>">
+                                        <i class="fas fa-file-pdf"></i>
+                                        <%= doc.filename.length > 20 ? doc.filename.substring(14, 25) + '...' : doc.filename %>
+                                    </a>
+                                </li>
+                            <% }) %>
+                        <% } else { %>
+                            <li class="no-documents">No documents uploaded yet.</li>
+                        <% } %>
+                    </div>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <form action="/user/logout" method="POST">
+                    <button type="submit" class="logout-button"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </form>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="navbar">
+                <div class="navbar-title">Welcome, <%= typeof userName !== 'undefined' ? userName : 'User' %>!</div>
+                <div class="navbar-actions">
+                    <a href="#" class="nav-icon"><i class="fas fa-bell"></i></a>
+                    <a href="#" class="nav-icon"><i class="fas fa-user-circle"></i></a>
+                    <form action="/user/logout" method="POST">
+                        <button type="submit" class="logout-button"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                    </form>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <div class="page-header">
+                    <h1>Upload New Document</h1>
+                </div>
+
+                <div class="upload-section">
+                    <div class="upload-container">
+                        <div class="upload-card-alt">
+                            <h2>Upload your files</h2>
+                            <p class="file-type-info-alt">File should be PDF only</p>
+
+                            <form id="uploadForm" action="/user/upload" method="POST" enctype="multipart/form-data">
+                                <div class="drag-drop-area-alt" id="dragDropArea">
+                                    <i class="fas fa-folder folder-icon-alt"></i>
+                                    <p>Drag & Drop your PDF file here</p>
+                                    <input type="file" id="fileInput" name="file" accept="application/pdf" required>
+                                </div>
+
+                                <div class="selected-files-section" style="display: none;">
+                                    <h3>Selected File:</h3>
+                                    <ul id="fileList" class="file-list"></ul>
+                                </div>
+
+                                <button class="upload-button" id="uploadButton" style="display: none;" type="submit">
+                                    <i class="fas fa-upload"></i> Upload
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const dragDropArea = document.getElementById('dragDropArea');
+        const fileList = document.getElementById('fileList');
+        const uploadButton = document.getElementById('uploadButton');
+        const selectedFilesSection = document.querySelector('.selected-files-section');
+        const uploadForm = document.getElementById('uploadForm');
+
+        let selectedFiles = [];
+
+        fileInput.addEventListener('change', (event) => {
+            handleFiles(event.target.files);
+        });
+
+        dragDropArea.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dragDropArea.classList.add('drag-over-alt'); // Use new class
+        });
+
+        dragDropArea.addEventListener('dragleave', () => {
+            dragDropArea.classList.remove('drag-over-alt'); // Use new class
+        });
+
+        dragDropArea.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dragDropArea.classList.remove('drag-over-alt'); // Use new class
+            handleFiles(event.dataTransfer.files);
+        });
+
+        function handleFiles(files) {
+            if (files.length === 0) return;
+
+            const file = files[0];
+
+            if (file.type !== 'application/pdf') {
+                alert('Only PDF files are allowed!');
+                fileInput.value = ''; // Clear input if invalid file type
+                selectedFiles = []; // Clear selected files
+                displayFiles(); // Update display
+                return;
+            }
+
+            selectedFiles = [file];
+            displayFiles();
+            selectedFilesSection.style.display = 'block';
+            uploadButton.style.display = 'inline-block';
+        }
+
+        function displayFiles() {
+            fileList.innerHTML = '';
+            if (selectedFiles.length === 0) {
+                selectedFilesSection.style.display = 'none';
+                uploadButton.style.display = 'none';
+                return;
+            }
+
+            selectedFiles.forEach((file, index) => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <i class="fas fa-file-pdf"></i>
+                    <span>${file.name}</span>
+                    <span class="file-size">(${(file.size / 1024).toFixed(2)} KB)</span>
+                    <button class="remove-file" data-index="${index}" type="button">&times;</button>
+                `;
+                fileList.appendChild(listItem);
+            });
+
+            document.querySelectorAll('.remove-file').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    selectedFiles = [];
+                    fileInput.value = ''; // Clear the file input visually
+                    displayFiles();
+                });
+            });
+        }
+
+        uploadForm.addEventListener('submit', (e) => {
+            if (selectedFiles.length === 0) {
+                e.preventDefault();
+                alert('Please select a PDF file to upload.');
+            }
+        });
+
+        // Initial display check
+        displayFiles();
+    </script>
+</body>
+</html>

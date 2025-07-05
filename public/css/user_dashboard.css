@@ -1,0 +1,413 @@
+/* General Body & Dashboard Wrapper */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    background-color: #f0f2f5;
+    color: #333;
+    display: flex;
+    min-height: 100vh; /* Ensure body takes full viewport height */
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+}
+
+.dashboard-wrapper {
+    display: flex;
+    width: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #2c3e50; /* Dark blue/grey */
+    color: white;
+    padding: 20px 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Pushes footer to bottom */
+}
+
+.sidebar-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 0 20px;
+}
+
+.sidebar-header h3 {
+    margin: 0;
+    font-size: 1.6em;
+    color: #ecf0f1;
+}
+
+.sidebar-nav {
+    flex-grow: 1; /* Allows nav to take up available space */
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li {
+    margin-bottom: 5px;
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: #ecf0f1;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sidebar-nav a i {
+    margin-right: 10px;
+    font-size: 1.1em;
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
+    background-color: #34495e; /* Slightly lighter dark blue */
+    color: #3498db; /* Blue highlight */
+}
+
+.sidebar-category {
+    font-size: 0.9em;
+    color: #bdc3c7;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    padding: 0 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.document-list-scroll {
+    max-height: 300px; /* Adjust as needed */
+    overflow-y: auto;
+    padding-right: 10px; /* Space for scrollbar */
+    margin-left: 20px; /* Align with other nav items */
+}
+
+/* Custom Scrollbar for document-list-scroll */
+.document-list-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+
+.document-list-scroll::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 4px;
+}
+
+.document-list-scroll::-webkit-scrollbar-track {
+    background-color: #444;
+}
+
+.document-item a {
+    font-size: 0.9em;
+    padding: 8px 10px; /* Adjusted padding within scroll area */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block; /* Ensure full link area is clickable */
+    color: #ecf0f1;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.document-item a:hover {
+    background-color: #34495e;
+}
+
+.document-item a .fas.fa-file-pdf {
+    color: #e74c3c; /* Red for PDF icon */
+    margin-right: 8px;
+}
+
+.no-documents {
+    font-size: 0.85em;
+    color: #bdc3c7;
+    padding: 8px 20px;
+    font-style: italic;
+}
+
+.sidebar-footer {
+    padding: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.logout-button {
+    background-color: #e74c3c;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1em;
+    transition: background-color 0.2s ease;
+    display: inline-flex; /* Align icon and text */
+    align-items: center;
+    justify-content: center;
+}
+
+.logout-button i {
+    margin-right: 8px;
+}
+
+.logout-button:hover {
+    background-color: #c0392b;
+}
+
+
+/* Main Content Area */
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #ffffff;
+    padding: 15px 30px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-title {
+    font-size: 1.5em;
+    font-weight: 600;
+    color: #333;
+}
+
+.navbar-actions {
+    display: flex;
+    align-items: center;
+}
+
+.nav-icon {
+    font-size: 1.2em;
+    color: #555;
+    margin-left: 20px;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.nav-icon:hover {
+    color: #3498db;
+}
+
+.nav-button {
+    background-color: #e74c3c;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-left: 20px;
+    transition: background-color 0.2s ease;
+}
+
+.nav-button:hover {
+    background-color: #c0392b;
+}
+
+/* Content Area for Page Specific Content */
+.content-area {
+    flex-grow: 1;
+    padding: 30px;
+    overflow-y: auto; /* Allow content area to scroll if needed */
+}
+
+.page-header {
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.page-header h1 {
+    font-size: 2em;
+    color: #333;
+    margin: 0;
+}
+
+/* --- Refined Upload UI Specific Styles (using -alt suffix) --- */
+.upload-section {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Adjust alignment within the content area */
+    padding: 20px 0;
+}
+
+.upload-container {
+    width: 100%;
+    max-width: 500px; /* Keep consistent max-width for the card */
+}
+
+.upload-card-alt { /* Renamed for distinction */
+    background-color: #ffffff;
+    border-radius: 15px; /* Softer corners */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); /* Smoother shadow */
+    padding: 40px; /* Increased padding */
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.upload-card-alt h2 {
+    font-size: 1.6em; /* Slightly smaller for balance */
+    color: #333333;
+    margin-bottom: 5px; /* Reduced margin */
+    font-weight: 600;
+}
+
+.upload-card-alt .file-type-info-alt { /* Renamed */
+    font-size: 0.9em;
+    color: #777777;
+    margin-bottom: 30px;
+}
+
+.drag-drop-area-alt { /* Renamed for distinction */
+    border: 2px dashed #d0d0d0; /* Lighter border */
+    border-radius: 10px;
+    padding: 50px 20px;
+    background-color: #fcfcfc; /* Whiter background */
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 25px;
+}
+
+.drag-drop-area-alt.drag-over-alt { /* New class for drag-over state */
+    border-color: #6a90f5; /* A bit brighter blue on hover */
+    background-color: #f0f8ff; /* Lighter blue background on hover */
+}
+
+.drag-drop-area-alt:hover {
+    border-color: #a0a0a0;
+    background-color: #f8f8f8; /* Slightly darker on general hover */
+}
+
+.folder-icon-alt { /* Renamed */
+    font-size: 4.5em; /* Larger icon */
+    color: #3f87f5; /* Matching blue */
+    margin-bottom: 20px; /* Increased margin */
+    display: block;
+}
+
+.drag-drop-area-alt p {
+    font-size: 1.1em; /* Slightly larger text */
+    color: #888888;
+    margin: 0;
+}
+
+.drag-drop-area-alt input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Existing styles for selected-files-section, file-list, remove-file, upload-button can largely remain */
+.selected-files-section {
+    text-align: left;
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.selected-files-section h3 {
+    font-size: 1.1em;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.file-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 150px; /* Reduced height for smaller display */
+    overflow-y: auto;
+}
+
+.file-list li {
+    display: flex;
+    align-items: center;
+    background-color: #f0f4f7;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    font-size: 0.95em;
+    color: #444;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.file-list li .fas.fa-file-pdf { /* Changed icon for PDF */
+    font-size: 1.2em;
+    color: #e74c3c; /* Red for PDF icon */
+    margin-right: 10px;
+}
+
+.file-list li span {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-list li .file-size {
+    font-size: 0.85em;
+    color: #888;
+    margin-left: 10px;
+}
+
+.remove-file {
+    background: none;
+    border: none;
+    color: #dc3545;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-left: 15px;
+    padding: 0 5px;
+    transition: color 0.2s ease;
+}
+
+.remove-file:hover {
+    color: #c82333;
+}
+
+.upload-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-size: 1.05em;
+    cursor: pointer;
+    margin-top: 30px;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.upload-button i {
+    margin-right: 8px;
+}
+
+.upload-button:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+
+.upload-button:active {
+    transform: translateY(0);
+}

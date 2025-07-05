@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= typeof title !=='undefined' ? title : 'Chat with Document' %>
+    </title>
+    <link rel="stylesheet" href="/css/user_dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/css/chat_doc.css">
+</head>
+
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Dashboard</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="/user/dashboard"
+                            class="<%= typeof activePage !== 'undefined' && activePage === 'dashboard' ? 'active' : '' %>"><i
+                                class="fas fa-home"></i> Home</a></li>
+                    <li><a href="/user/upload"
+                            class="<%= typeof activePage !== 'undefined' && activePage === 'upload' ? 'active' : '' %>"><i
+                                class="fas fa-file-upload"></i> Upload Document</a></li>
+                    <li><a href="/user/chat"
+                            class="<%= typeof activePage !== 'undefined' && activePage === 'chat' ? 'active' : '' %>"><i
+                                class="fas fa-comments"></i> Chat with Document</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="#"><i class="fas fa-info-circle"></i> Help</a></li>
+                    <li class="sidebar-category">Your Documents</li>
+                    <div id="userDocumentsList" class="document-list-scroll">
+                        <% if (typeof documents !=='undefined' && documents.length> 0) { %>
+                            <% documents.forEach(doc=> { %>
+                                <li class="document-item">
+                                    <a href="/user/chat/<%= doc.id %>" class="document-link" data-doc-id="<%= doc.id %>"
+                                        title="<%= doc.filename %>">
+                                        <i class="fas fa-file-pdf"></i>
+                                        <%= doc.filename.length> 20 ? doc.filename.substring(0, 17) + '...' :
+                                            doc.filename %>
+                                    </a>
+                                </li>
+                                <% }) %>
+                                    <% } else { %>
+                                        <li class="no-documents">No documents uploaded yet.</li>
+                                        <% } %>
+                    </div>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <form action="/user/logout" method="POST">
+                    <button type="submit" class="logout-button"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </form>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="navbar">
+                <div class="navbar-title">Welcome, <%= typeof userName !=='undefined' ? userName : 'User' %>!</div>
+                <div class="navbar-actions">
+                    <a href="#" class="nav-icon"><i class="fas fa-bell"></i></a>
+                    <a href="#" class="nav-icon"><i class="fas fa-user-circle"></i></a>
+                    <form action="/user/logout" method="POST">
+                        <button type="submit" class="logout-button"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                    </form>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <div class="page-header">
+                    <h1>Chat with Your Documents</h1>
+                </div>
+
+                <div class="chat-section">
+                    <div class="chat-container">
+                        <div class="document-sidebar">
+                            <h3>My Documents</h3>
+                            <ul id="chatDocumentList">
+                                <% if (typeof documents !=='undefined' && documents.length> 0) { %>
+                                    <% documents.forEach(doc=> { %>
+                                        <li>
+                                            <a href="#"
+                                                class="chat-doc-item <%= typeof selectedDocId !== 'undefined' && selectedDocId == doc.id ? 'active-doc' : '' %>"
+                                                data-doc-id="<%= doc.id %>" data-doc-name="<%= doc.filename %>">
+                                                <i class="fas fa-file-pdf"></i>
+                                                <%= doc.filename.length> 25 ? doc.filename.substring(0, 22) + '...' :
+                                                    doc.filename %>
+                                            </a>
+                                        </li>
+                                        <% }) %>
+                                            <% } else { %>
+                                                <li class="no-documents">No documents to chat with.</li>
+                                                <% } %>
+                            </ul>
+                        </div>
+                        <div class="chat-area">
+                            <div class="chat-header" id="chatHeader">
+                                <% if (typeof selectedDocName !=='undefined' && selectedDocName) { %>
+                                    Chatting with: <%= selectedDocName %>
+                                        <% } else { %>
+                                            Select a document to start chatting
+                                            <% } %>
+                            </div>
+                            <div class="chat-messages" id="chatMessages">
+                                <% if (typeof selectedDocId==='undefined' || !selectedDocId) { %>
+                                    <div class="no-selected-document">
+                                        <i class="fas fa-hand-point-left"></i>
+                                        <p>Please select a document from the left to start a conversation.</p>
+                                    </div>
+                                    <% } else { %>
+                                        <div class="message-bubble ai">
+                                            <div class="message-content">Hello! How can I help you with this document
+                                                today?</div>
+                                        </div>
+                                        <div class="message-bubble user">
+                                            <div class="message-content">What is the main topic discussed in this
+                                                document?</div>
+                                        </div>
+                                        <div class="message-bubble ai">
+                                            <div class="message-content">Based on my analysis, the main topic of this
+                                                document appears to be [Summarized Topic].</div>
+                                        </div>
+                                        <% } %>
+                            </div>
+                            <div class="chat-input-area">
+                                <textarea id="chatInput" placeholder="Type your message..." rows="1" <%=typeof
+                                    selectedDocId==='undefined' || !selectedDocId ? 'disabled' : '' %>></textarea>
+                                <button id="sendMessageButton" <%=typeof selectedDocId==='undefined' || !selectedDocId
+                                    ? 'disabled' : '' %>><i class="fas fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const chatDocumentList = document.getElementById('chatDocumentList');
+        const chatHeader = document.getElementById('chatHeader');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const sendMessageButton = document.getElementById('sendMessageButton');
+
+        // let currentSelectedDocId = '<%= typeof selectedDocId !== 'undefined' ? selectedDocId : '' %>';
+        // let currentSelectedDocName = '<%= typeof selectedDocName !== 'undefined' ? selectedDocName : '' %>';
+
+        // Function to load chat history for a selected document (placeholder)
+        function loadChatHistory(docId) {
+            // In a real application, you would make an AJAX request here
+            // to fetch the chat history for the given docId from your server.
+            console.log(`Loading chat history for document ID: ${docId}`);
+            chatMessages.innerHTML = `
+                <div class="message-bubble ai">
+                    <div class="message-content">Hello! How can I help you with <b>${currentSelectedDocName}</b> today?</div>
+                </div>
+                `;
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+        }
+
+        // Function to send a message (placeholder)
+        function sendMessage() {
+            const messageText = chatInput.value.trim();
+            if (messageText === '' || !currentSelectedDocId) {
+                return;
+            }
+
+            // Display user's message
+            const userMessageBubble = document.createElement('div');
+            userMessageBubble.classList.add('message-bubble', 'user');
+            userMessageBubble.innerHTML = `<div class="message-content">${messageText}</div>`;
+            chatMessages.appendChild(userMessageBubble);
+            chatInput.value = ''; // Clear input
+
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+
+            // Simulate AI response (in a real app, send to server and get response)
+            setTimeout(() => {
+                const aiResponseBubble = document.createElement('div');
+                aiResponseBubble.classList.add('message-bubble', 'ai');
+                aiResponseBubble.innerHTML = `<div class="message-content">Thank you for your question about "${currentSelectedDocName}". I'm processing your request...</div>`;
+                chatMessages.appendChild(aiResponseBubble);
+                chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+            }, 500);
+
+            // In a real application, you would send this message to your backend
+            // fetch('/api/chat/send', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify({ docId: currentSelectedDocId, message: messageText }),
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //     // Handle AI response and display it
+            //     const aiResponseBubble = document.createElement('div');
+            //     aiResponseBubble.classList.add('message-bubble', 'ai');
+            //     aiResponseBubble.innerHTML = `<div class="message-content">${data.response}</div>`;
+            //     chatMessages.appendChild(aiResponseBubble);
+            //     chatMessages.scrollTop = chatMessages.scrollHeight;
+            // })
+            // .catch(error => console.error('Error sending message:', error));
+        }
+
+        // Event listeners for document selection in the chat sidebar
+        chatDocumentList.addEventListener('click', (event) => {
+            const targetLink = event.target.closest('.chat-doc-item');
+            if (targetLink) {
+                event.preventDefault();
+
+                // Remove active class from previous active document
+                const currentActive = chatDocumentList.querySelector('.active-doc');
+                if (currentActive) {
+                    currentActive.classList.remove('active-doc');
+                }
+
+                // Add active class to the newly selected document
+                targetLink.classList.add('active-doc');
+
+                currentSelectedDocId = targetLink.dataset.docId;
+                currentSelectedDocName = targetLink.dataset.docName;
+
+                chatHeader.textContent = `Chatting with: ${currentSelectedDocName}`;
+                chatInput.disabled = false;
+                sendMessageButton.disabled = false;
+
+                loadChatHistory(currentSelectedDocId);
+            }
+        });
+
+        // Event listener for sending message
+        sendMessageButton.addEventListener('click', sendMessage);
+
+        // Allow sending message with Enter key
+        chatInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Initialize chat if a document is pre-selected (e.g., via URL parameter)
+        if (currentSelectedDocId) {
+            loadChatHistory(currentSelectedDocId);
+            // Ensure the correct item in the main sidebar is active
+            const mainSidebarDocLink = document.querySelector(`.sidebar-nav a[href="/user/chat/${currentSelectedDocId}"]`);
+            if (mainSidebarDocLink) {
+                // The main sidebar links are general chat page links, not document specific ones.
+                // So we just ensure the main chat link is active.
+                const chatPageLink = document.querySelector('.sidebar-nav a[href="/user/chat"]');
+                if (chatPageLink) {
+                    chatPageLink.classList.add('active');
+                }
+            }
+        } else {
+            // If no document is selected, ensure chat input is disabled
+            chatInput.disabled = true;
+            sendMessageButton.disabled = true;
+        }
+
+        // Ensure the main "Chat with Document" link in the sidebar is active
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatNavLink = document.querySelector('a[href="/user/chat"]');
+            if (chatNavLink) {
+                chatNavLink.classList.add('active');
+            }
+        });
+    </script>
+</body>
+
+</html>
