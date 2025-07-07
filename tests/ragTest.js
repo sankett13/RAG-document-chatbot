@@ -28,7 +28,7 @@ const embeddings = new GoogleGenerativeAIEmbeddings({
   model: "text-embedding-004", // 768 dimensions
   taskType: TaskType.RETRIEVAL_DOCUMENT,
   title: "Resume Embeddings",
-  apiKey: "AIzaSyAerN0hPWMN0E3yLbDlPBnBV24Q-o6acaw"
+  apiKey: "API_KEY"
 });
 
 const embedDocuments = await embeddings.embedDocuments(splitDocuments.map(doc => doc.pageContent));
