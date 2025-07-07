@@ -3,7 +3,7 @@ import { GoogleGenerativeAIEmbeddings,ChatGoogleGenerativeAI } from "@langchain/
 
 const llm = new ChatGoogleGenerativeAI({
   model: "gemini-2.5-flash",
-  apiKey: "AIzaSyAerN0hPWMN0E3yLbDlPBnBV24Q-o6acaw",
+  apiKey: "API_KEY",
 });
 
 
